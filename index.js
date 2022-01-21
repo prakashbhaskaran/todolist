@@ -15,7 +15,7 @@ const generateTemplate = (todo) => {
   <input
     type="text"
     class="text bg-transparent text-light"
-    value=${todo}
+    value='${todo}'
     readonly="readonly"
   />
     <i class="far fa-trash-alt delete title="Delete"></i>
@@ -55,6 +55,7 @@ function EditDataInLocalStorage(data, index) {
 const storage = JSON.parse(localStorage.getItem("todo")) || [];
 
 for (const todo of storage) {
+  console.log(todo);
   generateTemplate(todo);
 }
 
@@ -80,19 +81,15 @@ todoList.addEventListener("click", (e) => {
   }
 
   if (e.target.classList.contains("edit")) {
-
     input.removeAttribute("readonly");
     input.focus();
     e.target.parentElement.firstElementChild.className = "fas fa-save save";
     e.target.parentElement.firstElementChild.setAttribute("title", "save");
-
   } else if (e.target.classList.contains("save")) {
-
     input.setAttribute("readonly", "readonly");
     input.blur();
     e.target.parentElement.firstElementChild.className = "fas fa-edit edit";
     e.target.parentElement.firstElementChild.setAttribute("title", "edit");
     EditDataInLocalStorage(input.value, index);
-
   }
 });
