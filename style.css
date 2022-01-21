@@ -10,11 +10,14 @@ input[type="text"]:focus {
   border: none;
   background: white;
   max-width: 400px;
+  outline: none;
 }
 .todos li {
   background: crimson;
 }
-.delete {
+.delete,
+.edit,
+.save {
   cursor: pointer;
 }
 .delete:hover {

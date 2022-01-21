@@ -11,15 +11,20 @@ const generateTemplate = (todo) => {
       text-light
     "
   >
-    <span>${todo}</span>
-    <i class="far fa-trash-alt delete"></i>
+  <i class="fas fa-edit edit" title="Edit"></i>
+  <input
+    type="text"
+    class="text bg-transparent text-light"
+    value=${todo}
+    readonly="readonly"
+  />
+    <i class="far fa-trash-alt delete title="Delete"></i>
   </li>`;
 
   todoList.innerHTML += html;
 };
 
 function SaveDataToLocalStorage(data) {
-
   let item = [];
 
   item = JSON.parse(localStorage.getItem("todo")) || [];
@@ -32,7 +37,6 @@ function SaveDataToLocalStorage(data) {
 }
 
 function RemoveDataFromLocalStorage(data) {
-
   let item = JSON.parse(localStorage.getItem("todo"));
 
   let filteredItem = item.filter((e) => e !== data);
@@ -40,7 +44,16 @@ function RemoveDataFromLocalStorage(data) {
   localStorage.setItem("todo", JSON.stringify(filteredItem));
 }
 
-const storage = JSON.parse(localStorage.getItem("todo"));
+function EditDataInLocalStorage(data, index) {
+  let item = JSON.parse(localStorage.getItem("todo"));
+
+  item.splice(index, 1, data);
+
+  localStorage.setItem("todo", JSON.stringify(item));
+}
+
+const storage = JSON.parse(localStorage.getItem("todo")) || [];
+
 for (const todo of storage) {
   generateTemplate(todo);
 }
@@ -52,14 +65,34 @@ addForm.addEventListener("submit", (e) => {
   addForm.reset();
 });
 
-
 todoList.addEventListener("click", (e) => {
+  const input = e.target.parentElement.children[1];
+
+  const index = Array.from(
+    e.target.parentElement.parentElement.children
+  ).indexOf(e.target.parentElement);
+
   if (e.target.classList.contains("delete")) {
     if (storage.length) {
-      RemoveDataFromLocalStorage(
-        e.target.parentElement.firstElementChild.innerHTML
-      );
+      RemoveDataFromLocalStorage(input.value);
     }
     e.target.parentElement.remove();
+  }
+
+  if (e.target.classList.contains("edit")) {
+
+    input.removeAttribute("readonly");
+    input.focus();
+    e.target.parentElement.firstElementChild.className = "fas fa-save save";
+    e.target.parentElement.firstElementChild.setAttribute("title", "save");
+
+  } else if (e.target.classList.contains("save")) {
+
+    input.setAttribute("readonly", "readonly");
+    input.blur();
+    e.target.parentElement.firstElementChild.className = "fas fa-edit edit";
+    e.target.parentElement.firstElementChild.setAttribute("title", "edit");
+    EditDataInLocalStorage(input.value, index);
+
   }
 });
