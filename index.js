@@ -55,7 +55,6 @@ function EditDataInLocalStorage(data, index) {
 const storage = JSON.parse(localStorage.getItem("todo")) || [];
 
 for (const todo of storage) {
-  console.log(todo);
   generateTemplate(todo);
 }
 
